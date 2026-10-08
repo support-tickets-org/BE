@@ -67,13 +67,11 @@ src/
 ├── app.ts                 wires dependencies
 ├── config/
 ├── db/                    pool, migration runner, SQL migrations
-├── routes/
 ├── middlewares/           validate, notFound, errorHandler
 ├── utils/
 └── modules/tickets/       routes, controller, service, repository, validation, types
 tests/
-├── tickets.test.ts        integration tests
-└── ticket.service.test.ts unit tests
+└── tickets.test.ts        integration tests
 ```
 
 ## Decisions
@@ -81,7 +79,7 @@ tests/
 - **PostgreSQL** for storage. Filtering, search and pagination run in SQL, and data persists across restarts.
 - **`pg` with raw SQL**, no ORM. One table does not need one.
 - **zod** for validation. The schemas also provide the TypeScript types.
-- **Layered module with dependency injection** using factory functions. `createApp({ db })` wires everything, so tests can pass a test database or a fake repository.
+- **Layered module with dependency injection** using factory functions. `createApp({ db })` wires everything, so tests can pass a test database.
 - **Express 5**, which handles errors from async handlers without a wrapper.
 - **Centralized error handler.** Unexpected errors are logged and returned as a generic `500` without a stack trace.
 - **`limit` is capped at 50**, not rejected.

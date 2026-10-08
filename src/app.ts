@@ -1,6 +1,5 @@
 import express, { type Express } from 'express';
 import type { Pool } from 'pg';
-import { createApiRouter } from './routes';
 import { notFound } from './middlewares/notFound';
 import { errorHandler } from './middlewares/errorHandler';
 import { createTicketRepository } from './modules/tickets/ticket.repository';
@@ -23,7 +22,7 @@ export function createApp({ db }: AppDependencies): Express {
   app.disable('x-powered-by');
   app.use(express.json({ limit: '10kb' }));
 
-  app.use('/api', createApiRouter({ tickets: createTicketRoutes(ticketController) }));
+  app.use('/api/tickets', createTicketRoutes(ticketController));
 
   app.use(notFound);
   app.use(errorHandler);
