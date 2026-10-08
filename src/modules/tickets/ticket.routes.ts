@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { validate } from '../../middlewares/validate';
-import * as controller from './ticket.controller';
+import type { TicketController } from './ticket.controller';
 import {
   createTicketSchema,
   listTicketsQuerySchema,
@@ -8,13 +8,17 @@ import {
   updateTicketSchema,
 } from './ticket.validation';
 
-export const ticketRoutes = Router();
+export function createTicketRoutes(controller: TicketController): Router {
+  const router = Router();
 
-ticketRoutes.get('/', validate({ query: listTicketsQuerySchema }), controller.list);
-ticketRoutes.post('/', validate({ body: createTicketSchema }), controller.create);
-ticketRoutes.patch(
-  '/:id',
-  validate({ params: ticketIdParamSchema, body: updateTicketSchema }),
-  controller.update,
-);
-ticketRoutes.delete('/:id', validate({ params: ticketIdParamSchema }), controller.remove);
+  router.get('/', validate({ query: listTicketsQuerySchema }), controller.list);
+  router.post('/', validate({ body: createTicketSchema }), controller.create);
+  router.patch(
+    '/:id',
+    validate({ params: ticketIdParamSchema, body: updateTicketSchema }),
+    controller.update,
+  );
+  router.delete('/:id', validate({ params: ticketIdParamSchema }), controller.remove);
+
+  return router;
+}

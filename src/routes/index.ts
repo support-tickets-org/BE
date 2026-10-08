@@ -1,6 +1,13 @@
 import { Router } from 'express';
-import { ticketRoutes } from '../modules/tickets/ticket.routes';
 
-export const router = Router();
+interface ApiRoutes {
+  tickets: Router;
+}
 
-router.use('/tickets', ticketRoutes);
+export function createApiRouter(routes: ApiRoutes): Router {
+  const router = Router();
+
+  router.use('/tickets', routes.tickets);
+
+  return router;
+}
