@@ -10,7 +10,7 @@ function isClientBodyError(err: unknown): err is { status: number } {
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   if (err instanceof HttpError) {
-    res.status(err.status).json({ error: { message: err.message, details: err.details } });
+    res.status(err.status).json({ error: { message: err.message } });
     return;
   }
 
