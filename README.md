@@ -12,6 +12,8 @@ Requirements: Node 20+, Docker.
 docker compose up -d --build
 ```
 
+Migrations run in a separate `migrate` container before the API starts.
+
 - API: `http://localhost:4000/api/tickets`
 - Postgres: `localhost:5434`
 
@@ -21,10 +23,9 @@ docker compose up -d --build
 docker compose up -d db
 cp .env.example .env
 npm install
+npm run migrate
 npm run dev
 ```
-
-The `tickets` table is created on startup.
 
 ### Tests
 
@@ -42,6 +43,7 @@ Tests use the `tickets_test` database.
 | `npm run dev` | Start with hot reload |
 | `npm run build` | Compile to `dist/` |
 | `npm start` | Run the compiled build |
+| `npm run migrate` | Apply pending migrations |
 | `npm run typecheck` | Type-check |
 | `npm test` | Run tests |
 
@@ -85,14 +87,14 @@ tests/
 - **Centralized error handler.** Unexpected errors are logged and returned as a generic `500` without a stack trace.
 - **`limit` is capped at 50**, not rejected.
 - **Search escapes `%` and `_`** so they match literally.
-- **Migrations are idempotent SQL files** run on startup.
+- **Migrations are plain SQL files** run by a separate command, not on API startup. Applied files are recorded in a `migrations` table, so each runs once, inside a transaction.
 
 ## Trade-offs
 
 - The list endpoint runs two queries (count and page).
 - Offset pagination is slower on large tables and can shift if data changes between pages.
 - `ILIKE '%q%'` does not use an index.
-- No migration history table, so migrations must stay idempotent.
+- Migrations are forward-only. There are no down migrations.
 - Integration tests require Docker for Postgres.
 - Both TypeScript and Docker are used, although the task suggests one bonus.
 
@@ -100,7 +102,7 @@ tests/
 
 - Auth with roles (agent and viewer).
 - Shared types package for the API and UI.
-- Migration tool with up/down migrations.
+- Down migrations, or a migration tool such as `node-pg-migrate`.
 - Full-text search or a `pg_trgm` index.
 - Cursor pagination, sorting, priority filter.
 - Logging, rate limiting and security headers.

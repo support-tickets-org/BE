@@ -8,6 +8,7 @@
     "dev": "tsx watch --env-file=.env src/server.ts",
     "build": "tsc -p tsconfig.build.json && node -e \"require('fs').cpSync('src/db/migrations','dist/db/migrations',{recursive:true})\"",
     "start": "node dist/server.js",
+    "migrate": "tsx --env-file=.env src/db/runMigrations.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
