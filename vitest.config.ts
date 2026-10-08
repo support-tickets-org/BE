@@ -10,6 +10,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],
+    env: { DATABASE_URL: process.env.TEST_DATABASE_URL ?? '' },
     // Integration tests share one database, so files must not run concurrently.
     fileParallelism: false,
   },

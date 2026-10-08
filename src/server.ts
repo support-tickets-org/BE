@@ -1,13 +1,11 @@
-import { createApp } from './app';
+import { app } from './app';
 import { config } from './config';
 import { migrate } from './db/migrate';
-import { createPool } from './db/pool';
 
 async function main() {
-  const pool = createPool(config.databaseUrl);
-  await migrate(pool);
+  await migrate();
 
-  createApp({ db: pool }).listen(config.port, () => {
+  app.listen(config.port, () => {
     console.log(`API listening on http://localhost:${config.port}`);
   });
 }
