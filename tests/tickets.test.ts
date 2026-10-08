@@ -1,19 +1,13 @@
 import request from 'supertest';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { createApp } from '../src/app';
+import { app } from '../src/app';
 import { migrate } from '../src/db/migrate';
-import { createPool } from '../src/db/pool';
-
-const connectionString = process.env.TEST_DATABASE_URL;
-if (!connectionString) throw new Error('TEST_DATABASE_URL is not set');
-
-const pool = createPool(connectionString);
-const app = createApp({ db: pool });
+import { pool } from '../src/db/pool';
 
 const createTicket = (body: object) => request(app).post('/api/tickets').send(body);
 
 beforeAll(async () => {
-  await migrate(pool);
+  await migrate();
 });
 
 beforeEach(async () => {

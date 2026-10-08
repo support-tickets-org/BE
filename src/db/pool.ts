@@ -1,5 +1,4 @@
 import { Pool } from 'pg';
+import { config } from '../config';
 
-export function createPool(connectionString: string): Pool {
-  return new Pool({ connectionString });
-}
+export const pool = new Pool({ connectionString: config.databaseUrl });
